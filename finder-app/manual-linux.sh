@@ -59,7 +59,7 @@ mkdir -p rootfs/{bin,sbin,etc,proc,sys,usr/{bin,sbin},dev,lib,lib64,home}
 
 if [ ! -d busybox ]; then
     echo "Cloning BusyBox"
-    git clone https://busybox.net/git/busybox.git
+    git clone https://github.com/mirror/busybox.git
 fi
 
 cd busybox
