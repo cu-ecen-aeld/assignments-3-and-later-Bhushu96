@@ -1,7 +1,7 @@
-#!/bin/bash
+k#!/bin/bash
 # Script outline to install and build kernel.
 # Author: Siddhant Jajoo
-# Updated to fully satisfy AESD Assignment 3 requirements
+# Fully fixed for AESD Assignment 3 autograder
 
 set -e
 set -u
@@ -38,7 +38,7 @@ make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} mrproper
 make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} defconfig
 make -j$(nproc) ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} all
 
-# Copy kernel Image to OUTDIR
+# Copy kernel Image
 cp arch/${ARCH}/boot/Image "${OUTDIR}/Image"
 
 ##############################################
@@ -54,14 +54,16 @@ fi
 mkdir -p rootfs/{bin,sbin,etc,proc,sys,usr/{bin,sbin},dev,lib,lib64,home}
 
 ##############################################
-# Build and install BusyBox
+# Build and install BusyBox (HTTPS clone)
 ##############################################
 
 if [ ! -d busybox ]; then
-    git clone git://busybox.net/busybox.git
+    echo "Cloning BusyBox"
+    git clone https://busybox.net/git/busybox.git
 fi
 
 cd busybox
+git fetch
 git checkout ${BUSYBOX_VERSION}
 
 make distclean
@@ -123,6 +125,9 @@ cd "${OUTDIR}/rootfs"
 find . | cpio -H newc -ov --owner root:root > "${OUTDIR}/initramfs.cpio"
 gzip -f "${OUTDIR}/initramfs.cpio"
 
+echo "======================================"
 echo "Build complete!"
 echo "Kernel Image: ${OUTDIR}/Image"
 echo "Initramfs:    ${OUTDIR}/initramfs.cpio.gz"
+echo "======================================"
+
