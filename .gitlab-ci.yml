@@ -1,8 +1,4 @@
-image: "cuaesd/aesd-dind"
-
-# See https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
-services:
-    - docker:19.03.12-dind
+image: "cuaesd/aesd-autotest"
 
 variables:
     GIT_SUBMODULE_STRATEGY: recursive
@@ -15,10 +11,4 @@ variables:
 test:
     stage: test
     script:
-        - cd ${CI_PROJECT_DIR}
-        - ./assignment-autotest/docker/docker-run-test.sh
-
-    artifacts:
-        paths:
-            - ${CI_PROJECT_DIR}/test.sh.log
-        when: always
+        - ./test.sh
